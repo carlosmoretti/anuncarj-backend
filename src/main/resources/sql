@@ -1,0 +1,9 @@
+CREATE FUNCTION dbo.CALCULAR_DISTANCIA (
+	@lat1 float, @lng1 float, @lat2 float, @lng2 float
+)
+RETURNS float as
+BEGIN
+	declare @geo1 geography = geography::Point(@lat1, @lng1, 4236);
+	declare @geo2 geography = geography::Point(@lat2, @lng2, 4236);
+	return @geo1.STDistance(@geo2)/1000
+END;
