@@ -38,38 +38,38 @@ public class ApplicationConfig {
 	@PostConstruct
 	public void postConstruct() throws IOException {
 		
-		for(int i = 0; i < 5; i++) {
-			Categoria categoria = new Categoria();
-			categoria.setNome("Teste " + i);
-			this.categoriaService.add(categoria);
-		}
-		
-		for(int i = 0; i < 10; i++) {
-			Anuncio anuncio = new Anuncio();
-			anuncio.setTitulo("Teste " + i);
-			anuncio.setEstrelas(3);
-			anuncio.setX(-22.837348);
-			anuncio.setY(-43.047517);
-			anuncio.setCategoria(categoriaService.getAll().get(0));
-			anuncio.setCep("21820096");
-			anuncio.setEndereco("Rua Rio da Prata");
-			anuncio.setNumero("481");
-			anuncio.setComplemento("N/A");
-			anuncio = anuncioService.add(anuncio);
-			
-			Imagem imagem = new Imagem();
-			imagem.setAnuncio(anuncio);
-			
-			URL url = new URL("https://picsum.photos/200/120");
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			BufferedImage img = ImageIO.read(url);
-			ImageIO.write(img, "jpg", baos);
-			imagem.setAnexo(baos.toByteArray());
-			imagemService.add(imagem);
-			
-		}
-		
-		log.info("Concluiu seed");
+//		for(int i = 0; i < 5; i++) {
+//			Categoria categoria = new Categoria();
+//			categoria.setNome("Teste " + i);
+//			this.categoriaService.add(categoria);
+//		}
+//		
+//		for(int i = 0; i < 10; i++) {
+//			Anuncio anuncio = new Anuncio();
+//			anuncio.setTitulo("Teste " + i);
+//			anuncio.setEstrelas(3);
+//			anuncio.setX(-22.837348);
+//			anuncio.setY(-43.047517);
+//			anuncio.setCategoria(categoriaService.getAll().get(0));
+//			anuncio.setCep("21820096");
+//			anuncio.setEndereco("Rua Rio da Prata");
+//			anuncio.setNumero("481");
+//			anuncio.setComplemento("N/A");
+//			anuncio = anuncioService.add(anuncio);
+//			
+//			Imagem imagem = new Imagem();
+//			imagem.setAnuncio(anuncio);
+//			
+//			URL url = new URL("https://picsum.photos/200/120");
+//			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//			BufferedImage img = ImageIO.read(url);
+//			ImageIO.write(img, "jpg", baos);
+//			imagem.setAnexo(baos.toByteArray());
+//			imagemService.add(imagem);
+//			
+//		}
+//		
+//		log.info("Concluiu seed");
 	}
 	
 }
