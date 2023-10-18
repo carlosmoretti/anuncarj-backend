@@ -1,15 +1,26 @@
 package com.br.anunciazo.application.service.impl;
 
-import java.math.BigDecimal;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.geo.Point;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.RestTemplate;
 
+import com.br.anunciazo.application.controller.dto.GeolocalizacaoDTO;
+import com.br.anunciazo.application.controller.dto.MapboxGeocodeDTO;
+import com.br.anunciazo.application.controller.dto.MapboxGeocodeFeatureDTO;
 import com.br.anunciazo.application.model.Anuncio;
 import com.br.anunciazo.application.service.GeolocalizacaoService;
 
 @Service
 public class GeolocalizacaoServiceImpl implements GeolocalizacaoService {
+	
+	@Value("${mapbox.api}")
+	private String mapboxToken;
 	
 	double SEMI_MAJOR_AXIS_MT = 6378137;
 	double SEMI_MINOR_AXIS_MT = 6356752.314245;
@@ -66,6 +77,31 @@ public class GeolocalizacaoServiceImpl implements GeolocalizacaoService {
 		anuncio.setX(posicaoAnuncio.getX());
 		anuncio.setY(posicaoAnuncio.getY());
 		return this.obterDistanciaEmMetros(posicaoUsuario, anuncio);
+	}
+	
+	@Override
+	public GeolocalizacaoDTO consultar(String endereco) {
+		RestTemplate restTemplate = new RestTemplate();
+		
+		String url = new StringBuilder()
+				.append("https://api.mapbox.com/geocoding/v5/mapbox.places/")
+				.append(endereco)
+				.append(".json")
+				.append("?access_token=")
+				.append(this.mapboxToken)
+				.toString();
+		
+		ResponseEntity<MapboxGeocodeDTO> response = restTemplate.exchange(url, HttpMethod.GET, null, MapboxGeocodeDTO.class);
+		
+		if(response.hasBody()) {
+			if(!CollectionUtils.isEmpty(response.getBody().getFeatures())) {
+				List<MapboxGeocodeFeatureDTO> dto = response.getBody().getFeatures();
+				MapboxGeocodeFeatureDTO primeiroItem = dto.get(0);
+				return new GeolocalizacaoDTO(primeiroItem.getCenter().get(1), primeiroItem.getCenter().get(0));
+			}
+		}
+		
+		return null;
 	}
 	
 }

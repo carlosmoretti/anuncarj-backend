@@ -7,8 +7,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.geo.Point;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
@@ -23,9 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.br.anunciazo.application.controller.BaseController;
+import com.br.anunciazo.application.controller.dto.SessaoDTO;
 import com.br.anunciazo.application.model.Anuncio;
 import com.br.anunciazo.application.model.Imagem;
-import com.br.anunciazo.application.model.Sessao;
 import com.br.anunciazo.application.service.AnuncioService;
 import com.br.anunciazo.application.service.ImagemService;
 import com.br.anunciazo.application.service.ServiceBase;
@@ -90,8 +88,8 @@ public class AnuncioController extends BaseController<Anuncio, Long> {
 
 	@Override
 	public Specification<Anuncio> montarFiltro(MultiValueMap<String, Object> filter) {
-		Optional<Sessao> sessao = this.sessaoService.obterSessao();
-		Point localizacaoUsuario = new Point(sessao.get().getX(), sessao.get().getY());
+		Optional<SessaoDTO> sessao = this.sessaoService.obterSessao();
+		Point localizacaoUsuario = new Point(sessao.get().getX().doubleValue(), sessao.get().getY().doubleValue());
 		return new Specification<Anuncio>() {
 			private static final long serialVersionUID = 1L;
 

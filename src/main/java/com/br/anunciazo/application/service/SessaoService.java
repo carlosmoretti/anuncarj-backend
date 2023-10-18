@@ -2,9 +2,8 @@ package com.br.anunciazo.application.service;
 
 import java.util.Optional;
 
-import com.br.anunciazo.application.model.Sessao;
+import com.br.anunciazo.application.controller.dto.SessaoDTO;
 
-public interface SessaoService extends ServiceBase<Sessao, Long> {
-	Optional<Sessao> findByToken(String token);
-	Optional<Sessao> obterSessao();
+public interface SessaoService {
+	Optional<SessaoDTO> obterSessao();
 }

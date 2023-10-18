@@ -6,14 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.geo.Point;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.br.anunciazo.application.controller.dto.SessaoDTO;
 import com.br.anunciazo.application.model.Anuncio;
-import com.br.anunciazo.application.model.Sessao;
 import com.br.anunciazo.application.repository.AnuncioRepository;
 import com.br.anunciazo.application.repository.BaseRepository;
 import com.br.anunciazo.application.service.AnuncioService;
@@ -46,12 +44,12 @@ public class AnuncioServiceImpl extends ServiceBaseImpl<Anuncio, Long> implement
 	public Page<Anuncio> get(Pageable pageable, Specification<Anuncio> specification) {
 		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
 		Page<Anuncio> anuncios = super.get(pageable, specification);
-		Optional<Sessao> sessao = this.sessaoService.obterSessao();
+		Optional<SessaoDTO> sessao = this.sessaoService.obterSessao();
 		
 		
 		for(Anuncio anuncio : anuncios.getContent())
 			anuncio.setDistancia(geolocalizacaoService
-					.obterDistanciaEmMetros(new Point(sessao.get().getX(), sessao.get().getY()), anuncio));
+					.obterDistanciaEmMetros(new Point(sessao.get().getX().doubleValue(), sessao.get().getY().doubleValue()), anuncio));
 		
 		return anuncios;
 	}
@@ -59,9 +57,9 @@ public class AnuncioServiceImpl extends ServiceBaseImpl<Anuncio, Long> implement
 	@Override
 	public Anuncio get(Long id) {
 		Anuncio anuncio = super.get(id);
-		Optional<Sessao> sessao = this.sessaoService.obterSessao();
+		Optional<SessaoDTO> sessao = this.sessaoService.obterSessao();
 		anuncio.setDistancia(geolocalizacaoService
-				.obterDistanciaEmMetros(new Point(sessao.get().getX(), sessao.get().getY()), anuncio));
+				.obterDistanciaEmMetros(new Point(sessao.get().getX().doubleValue(), sessao.get().getY().doubleValue()), anuncio));
 		return anuncio;
 	}
 }
